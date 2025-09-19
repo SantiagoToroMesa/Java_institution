@@ -1,5 +1,7 @@
 package models;
 
+import utils.JOptionpanelUtils;
+
 import java.util.ArrayList;
 
 public class Student extends Person {
@@ -19,8 +21,11 @@ public class Student extends Person {
     }
 
     public void addSubject(Subject subject){
-        if(subjects.size() <5){
+        if(subjects.size() <4){
             subjects.add(subject);
+        }
+        else{
+            JOptionpanelUtils.ShowMessage("You cant select more subjects \nYou're currently registered in 4 subjects");
         }
     }
 

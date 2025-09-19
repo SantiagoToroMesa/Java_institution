@@ -10,12 +10,21 @@ import java.awt.*;
 import java.util.List;
 
 public class Studentsmenu {
-    Studentservices services = new Studentservices();
+
+    private final  Studentservices studentservices;
+
+    public Studentsmenu(Studentservices studentservices){
+        this.studentservices = studentservices;
+    }
+
     public void start(){
         String [] opciones = {"Create student", "Show students" , "Select student", "Delete student", "Exit"};
         String option;
         do {
             option = JOptionpanelUtils.InputOptionList("Welcome to the students managments system \nwhat do you want to do today?", "Students menu", opciones);
+
+            if(option == null){return;}
+
             switch (option){
                 case "Create student":
                     createStudent();
@@ -37,23 +46,32 @@ public class Studentsmenu {
         }while(option != "Exit");
     }
 
-    private void createStudent(){
-        String name = InputRequester.requestString("Enter the student's name: ");
-        int age = InputRequester.requestInteger("Enter the student's age: ");
-        int document = InputRequester.requestInteger("Enter the student's document: ");
-        String email = InputRequester.requestString("Enter the student's email: ");
-        String course = InputRequester.requestString("Enter the student's course");
-        Student student = new Student(name,age,document,email,course);
-        services.createStudent(student);
-        System.out.println(student.mostrarinformacion());
-    }
+    private void createStudent() {
+        while(true){
+            String name = InputRequester.requestString("Enter the student's name: ");
+            int age = InputRequester.requestInteger("Enter the student's age: ");
 
+            if(age > 100 | age < 5) {
+                JOptionpanelUtils.ShowMessage("Age only can be between 5 - 100");
+                continue;
+            }
+
+            int document = InputRequester.requestInteger("Enter the student's document: ");
+            String email = InputRequester.requestString("Enter the student's email: ");
+            String course = InputRequester.requestString("Enter the student's course");
+
+            Student student = new Student(name, age, document, email, course);
+            studentservices.CreateStudent(student);
+            System.out.println(student.mostrarinformacion());
+            return;
+        }
+    }
     private void showStudents(){
-        List<Student> institution = services.showStudents();
+        List<Student> institution = studentservices.ShowStudents();
         StringBuilder students = new StringBuilder();
 
         students.append("====================== Institution ======================\n");
-        students.append(String.format("%-15s | %-5s | %-15s | %-30s | %-5s\n",
+        students.append(String.format("%-15s | %-5s | %-15s | %-30s | %-10s\n",
                 "Name", "Age", "Document", "Email", "course"));
         students.append("====================================================\n");
         for(Student s : institution){
@@ -65,7 +83,7 @@ public class Studentsmenu {
 
     private void deleteStudent() {
         // String builder
-        List<Student> institution = services.showStudents();
+        List<Student> institution = studentservices.ShowStudents();
         StringBuilder students = new StringBuilder();
         students.append("================ Students ================\n");
         students.append(String.format("%-15s | %-5s | %-10s\n",
@@ -92,14 +110,14 @@ public class Studentsmenu {
         );
 
         if (name != null && !name.trim().isEmpty()) {
-            services.deleteStudent(name.trim());
+            studentservices.DeleteStudent(name.trim());
         }
     }
 
     private void selectStudent(){
         Student selectOne;
         // String builder
-        List<Student> institution = services.showStudents();
+        List<Student> institution = studentservices.ShowStudents();
         StringBuilder students = new StringBuilder();
         students.append("================ Students ================\n");
         students.append(String.format("%-15s | %-5s | %-10s\n",
@@ -126,7 +144,7 @@ public class Studentsmenu {
         );
 
         if (name != null && !name.trim().isEmpty()) {
-            selectOne = services.searchStudent(name);
+            selectOne = studentservices.SearchStudent(name);
             if(selectOne == null){
                 JOptionpanelUtils.ShowMessage("Error founding " + name + "\ndont exits in the students list");
                 return;

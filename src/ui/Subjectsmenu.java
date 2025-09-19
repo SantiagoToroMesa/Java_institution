@@ -1,11 +1,13 @@
 package ui;
 
+import Enums.Subjects;
 import models.Student;
 import models.Subject;
 import utils.InputRequester;
 import utils.JOptionpanelUtils;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class Subjectsmenu {
@@ -18,8 +20,12 @@ public class Subjectsmenu {
     public void start(){
         String [] options = {"Create subject", "Show subjects", "Calculate average", "Exit"};
         String option;
+
         do {
             option = JOptionpanelUtils.InputOptionList("Select your option", student.getName() + "'s " + " Subjects menu", options);
+
+            if(option == null){return;}
+
             switch(option){
 
                 case "Create subject":
@@ -39,10 +45,33 @@ public class Subjectsmenu {
     }
 
     private void createSubject(){
-        String name = InputRequester.requestString("Enter the subject name");
-        double note = InputRequester.requestDouble("Enter the subject note (0.0 - 5.0").orElse(0.0);
-        Subject subject = new Subject(note,name);
-        student.addSubject(subject);
+        while(true) {
+            String name = JOptionpanelUtils.InputOptionList(
+                    "Select the subject:",
+                    "Subjects available",
+                    Arrays.stream(Subjects.values())
+                            .map(Enum::name)
+                            .toArray(String[]::new)
+            );
+
+            boolean exists = student.getsubjects().stream()
+                    .anyMatch(s -> s.getName().equalsIgnoreCase(name));
+
+            if (exists) {
+                JOptionpanelUtils.ShowMessage("You're already registered in this subject");
+                continue;
+            }
+
+            double note = InputRequester.requestDouble("Enter the subject note (0.0 - 5.0").orElse(0.0);
+            if (note > 5.0 || note < 0.0) {
+                JOptionpanelUtils.ShowMessage("The note has to be between 0.0 - 5.0");
+                continue;
+            }
+
+            Subject subject = new Subject(note, name);
+            student.addSubject(subject);
+            return;
+        }
     }
 
     private void showSubjects(){

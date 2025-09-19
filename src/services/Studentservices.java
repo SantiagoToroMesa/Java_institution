@@ -1,23 +1,27 @@
 package services;
 
+import Interfaces.StudentInterface;
 import models.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Studentservices {
+public class Studentservices implements StudentInterface {
 
     private List<Student> students = new ArrayList<>();
 
-    public void createStudent(Student student){
+    @Override
+    public void CreateStudent(Student student) {
         students.add(student);
     }
 
-    public List<Student> showStudents(){
+    @Override
+    public List<Student> ShowStudents() {
         return students;
     }
 
-    public Student searchStudent(String name) {
+    @Override
+    public Student SearchStudent(String name) {
         for (Student a : students) {
             if (a.getName().equalsIgnoreCase(name)) {
                 return a;
@@ -26,8 +30,8 @@ public class Studentservices {
         return null;
     }
 
-    public void deleteStudent(String nombre){
-        students.removeIf(a -> a.getName().equalsIgnoreCase(nombre));
+    @Override
+    public void DeleteStudent(String name) {
+        students.removeIf(a -> a.getName().equalsIgnoreCase(name));
     }
-
 }

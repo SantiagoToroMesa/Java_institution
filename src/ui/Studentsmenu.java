@@ -96,7 +96,7 @@ public class Studentsmenu {
 
         JTextArea textArea = new JTextArea(students.toString(), 10, 40);
         textArea.setEditable(false);
-        textArea.setFont(new Font("monospaced", Font.PLAIN, 12)); // fuente de ancho fijo
+        textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         String name = (String) JOptionPane.showInputDialog(
